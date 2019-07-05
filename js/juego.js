@@ -134,36 +134,37 @@ Juego.capturarMovimiento = function(tecla) {
         this.jugador.ancho = 30;
         this.jugador.alto = 15;
         this.jugador.sprite = 'imagenes/auto_rojo_izquierda.png';
-        this.jugador.mover('izquierda', movX);
     }
     if (tecla == 'arriba') {
         this.jugador.ancho = 15;
         this.jugador.alto = 30;
         movY = -velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_arriba.png';
-        this.jugador.mover('arriba', movY);
     }
     if (tecla == 'der') {
         this.jugador.ancho = 30;
         this.jugador.alto = 15;
         movX = velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_derecha.png';
-        this.jugador.mover('derecha', movX);
     }
     if (tecla == 'abajo') {
         this.jugador.ancho = 15;
         this.jugador.alto = 30;
         movY = velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_abajo.png';
-        this.jugador.mover('abajo', movY);
     }
 
     // Si se puede mover hacia esa posicion hay que hacer efectivo este movimiento
     if (this.chequearColisiones(movX + this.jugador.x, movY + this.jugador.y)) {
         /* Aca tiene que estar la logica para mover al jugador invocando alguno
         de sus metodos  */
-
-        /* COMPLETAR */
+        if(tecla == 'der' || tecla == 'izq')
+        {
+            this.jugador.mover(tecla, movX);
+        }
+        else{
+            this.jugador.mover(tecla, movY);
+        }
     }
 };
 
@@ -178,7 +179,6 @@ Juego.dibujar = function() {
     utilizando al dibujante y los metodos que nos brinda.
     "Dibujante dibuja al jugador" */
     Dibujante.dibujarEntidad(this.jugador)
-        /* Completar */
 
     // Se recorren los obstaculos de la carretera pintandolos
     this.obstaculosCarretera.forEach(function(obstaculo) {
@@ -197,6 +197,9 @@ Juego.dibujar = function() {
         var x = tamanio * i
         Dibujante.dibujarRectangulo('red', x, 0, tamanio, 8);
     }
+
+    // El dibujante dibuja la meta 
+    Dibujante.dibujarRectangulo('blue', x-10, 555, 130, 8);
 };
 
 
@@ -229,11 +232,12 @@ Juego.calcularAtaques = function() {
 /* Aca se chequea si el jugador se peude mover a la posicion destino.
  Es decir, que no haya obstaculos que se interpongan. De ser asi, no podra moverse */
 Juego.chequearColisiones = function(x, y) {
-    debugger
     var puedeMoverse = true
     this.obstaculos().forEach(function(obstaculo) {
         if (this.intersecan(obstaculo, this.jugador, x, y)) {
+            debugger
             obstaculo.chocar();
+
             /*COMPLETAR, obstaculo debe chocar al jugador*/
 
             puedeMoverse = false

@@ -12,10 +12,10 @@ var Jugador = {
     vidas: 5,
     mover: function(direccion, movimiento) {
         switch (direccion) {
-            case 'derecha':
+            case 'der':
                 this.x += movimiento;
                 break;
-            case 'izquierda':
+            case 'izq':
                 this.x += movimiento;
                 break;
             case 'arriba':
@@ -25,12 +25,11 @@ var Jugador = {
                 this.y += movimiento;
                 break;
             default:
-                alert('Movimiento no detectado');
+                //alert('Movimiento no detectado');
                 break;
         }
     },
     perdervidas: function() {
-            debugger
             this.vidas -= 1;
         }
         // Hay que agregar lo que falte al jugador: movimientos, perdida de vidas,
