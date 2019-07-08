@@ -1,19 +1,26 @@
 body {
-  background-image: url('../imagenes/fondo.png');
+    background-image: url('../imagenes/fondo.png');
 }
 
 canvas {
-  margin: auto;
-  display: flex;
-  margin-top: calc(50vh - 286px);
+    display: flex;
+    margin-top: calc(50vh - 286px);
+    float: right;
 }
 
 .boton-recargar {
-  margin: auto;
-  display: flex;
-  background: none;
-  border: none;
-  color: white;
-  font-family: monospace;
-  visibility: hidden;
+    margin: auto;
+    display: flex;
+    background: none;
+    border: none;
+    color: white;
+    font-family: monospace;
+    visibility: hidden;
+}
+
+.image {
+    margin-top: calc(50vh - 286px);
+    height: 200px;
+    width: 33rem;
+    float: left
 }

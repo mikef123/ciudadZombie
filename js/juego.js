@@ -7,6 +7,8 @@ texto COMPLETAR que deben completarse segun lo indique la consigna.
 
 El objeto Juego contiene mucho codigo. Tomate tu tiempo para leerlo tranquilo
 y entender que es lo que hace en cada una de sus partes. */
+alert('Oprime la tecla "espacio" si deseas subir de nivel');
+
 
 var Juego = {
     // Aca se configura el tamanio del canvas del juego
@@ -20,11 +22,11 @@ var Juego = {
     obstaculosCarretera: [
         /*Aca se van a agregar los obstaculos visibles. Tenemos una valla horizontal
         de ejemplo, pero podras agregar muchos mas. */
-        new Obstaculo('imagenes/valla_horizontal.png', 70, 430, 30, 30, 1),
-        new Obstaculo('imagenes/valla_horizontal.png', 130, 430, 30, 30, 1),
+        new Obstaculo('imagenes/valla_horizontal.png', 70, 450, 30, 30, 1),
+        new Obstaculo('imagenes/valla_horizontal.png', 130, 450, 30, 30, 1),
         new Obstaculo('imagenes/valla_horizontal.png', 130, 110, 30, 30, 1),
         new Obstaculo('imagenes/valla_horizontal.png', 160, 110, 30, 30, 1),
-        new Obstaculo('imagenes/valla_horizontal.png', 100, 430, 30, 30, 1),
+        new Obstaculo('imagenes/valla_horizontal.png', 100, 450, 30, 30, 1),
         new Obstaculo('imagenes/auto_verde_abajo.png', 180, 230, 15, 30, 1),
         new Obstaculo('imagenes/bache.png', 180, 280, 30, 30, 1),
         new Obstaculo('imagenes/valla_vertical.png', 180, 460, 30, 30, 1),
@@ -60,7 +62,14 @@ var Juego = {
     ],
     // Los enemigos se agregaran en este arreglo.
     enemigos: [
-
+        new ZombieCaminante('imagenes/zombie1.png', 75, 380, 10, 10, 1, { desdeX: 75, hastaX: 190, desdeY: 380, hastaY: 380 }, "h"),
+        new ZombieCaminante('imagenes/zombie2.png', 900, 400, 10, 10, 1, { desdeX: 0, hastaX: 900, desdeY: 400, hastaY: 430 }, "h"),
+        new ZombieCaminante('imagenes/zombie4.png', 800, 400, 10, 10, 1, { desdeX: 0, hastaX: 800, desdeY: 400, hastaY: 450 }, "v"),
+        new ZombieCaminante('imagenes/zombie4.png', 900, 70, 10, 10, 1, { desdeX: 330, hastaX: 900, desdeY: 50, hastaY: 150 }, "h"),
+        new ZombieConductor('imagenes/tren_vertical.png', 644, 30, 30, 90, 1, { desdeX: 644, hastaX: 644, desdeY: 30, hastaY: 470 }, "v"),
+        new ZombieConductor('imagenes/tren_vertical.png', 678, 470, 30, 90, 1, { desdeX: 644, hastaX: 644, desdeY: 30, hastaY: 470 }, "v"),
+        new ZombieConductor('imagenes/tren_horizontal.png', 30, 322, 90, 30, 1, { desdeX: 30, hastaX: 850, desdeY: 322, hastaY: 322 }, "h"),
+        new ZombieCaminante('imagenes/zombie3.png', 760, 470, 10, 10, 1, { desdeX: 760, hastaX: 870, desdeY: 470, hastaY: 470 }, "h")
     ]
 
 }
@@ -72,6 +81,8 @@ todas las demas. */
 Juego.iniciarRecursos = function() {
     Resources.load([
         'imagenes/mapa.png',
+        'imagenes/Mensaje1.png',
+        'imagenes/Mensaje2.png',
         'imagenes/mensaje_gameover.png',
         'imagenes/Splash.png',
         'imagenes/bache.png',
@@ -90,6 +101,7 @@ Juego.iniciarRecursos = function() {
         'imagenes/auto_verde_abajo.png',
         'imagenes/auto_verde_derecha.png'
     ]);
+
     Resources.onReady(this.comenzar.bind(Juego));
 };
 
@@ -99,6 +111,7 @@ Juego.obstaculos = function() {
 };
 
 Juego.comenzar = function() {
+
     // Inicializar el canvas del juego
     Dibujante.inicializarCanvas(this.anchoCanvas, this.altoCanvas);
     /* El bucle principal del juego se llamara continuamente para actualizar
@@ -132,37 +145,39 @@ Juego.capturarMovimiento = function(tecla) {
     if (tecla == 'izq') {
         movX = -velocidad;
         this.jugador.ancho = 30;
-        this.jugador.alto = 15;
         this.jugador.sprite = 'imagenes/auto_rojo_izquierda.png';
+        this.jugador.alto = 15;
     }
     if (tecla == 'arriba') {
         this.jugador.ancho = 15;
         this.jugador.alto = 30;
-        movY = -velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_arriba.png';
+        movY = -velocidad;
     }
     if (tecla == 'der') {
         this.jugador.ancho = 30;
         this.jugador.alto = 15;
-        movX = velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_derecha.png';
+        movX = velocidad;
     }
     if (tecla == 'abajo') {
         this.jugador.ancho = 15;
         this.jugador.alto = 30;
-        movY = velocidad;
         this.jugador.sprite = 'imagenes/auto_rojo_abajo.png';
+        movY = velocidad;
+    }
+
+    if (tecla == 'space') {
+        Juego.comenzar();
     }
 
     // Si se puede mover hacia esa posicion hay que hacer efectivo este movimiento
     if (this.chequearColisiones(movX + this.jugador.x, movY + this.jugador.y)) {
         /* Aca tiene que estar la logica para mover al jugador invocando alguno
         de sus metodos  */
-        if(tecla == 'der' || tecla == 'izq')
-        {
+        if (tecla == 'der' || tecla == 'izq') {
             this.jugador.mover(tecla, movX);
-        }
-        else{
+        } else {
             this.jugador.mover(tecla, movY);
         }
     }
@@ -173,7 +188,6 @@ Juego.dibujar = function() {
     Dibujante.borrarAreaDeJuego();
     //Se pinta la imagen de fondo segun el estado del juego
     this.dibujarFondo();
-
 
     /* Aca hay que agregar la logica para poder dibujar al jugador principal
     utilizando al dibujante y los metodos que nos brinda.
@@ -187,7 +201,7 @@ Juego.dibujar = function() {
 
     // Se recorren los enemigos pintandolos
     this.enemigos.forEach(function(enemigo) {
-        /* Completar */
+        Dibujante.dibujarEntidad(enemigo);
     });
 
     // El dibujante dibuja las vidas del jugador
@@ -198,8 +212,8 @@ Juego.dibujar = function() {
         Dibujante.dibujarRectangulo('red', x, 0, tamanio, 8);
     }
 
-    // El dibujante dibuja la meta 
-    Dibujante.dibujarRectangulo('blue', x-10, 555, 130, 8);
+    // El dibujante dibuja la metas
+    Dibujante.dibujarRectangulo('yellow', 758.8, 544, 130, 20);
 };
 
 
@@ -208,7 +222,9 @@ Juego.dibujar = function() {
 un recorrido por los enemigos para dibujarlos en pantalla ahora habra que hacer
 una funcionalidad similar pero para que se muevan.*/
 Juego.moverEnemigos = function() {
-    /* COMPLETAR */
+    this.enemigos.forEach(function(enemigo) {
+        enemigo.mover();
+    });
 };
 
 /* Recorre los enemigos para ver cual esta colisionando con el jugador
@@ -218,11 +234,11 @@ se ven las colisiones con los obstaculos. En este caso sera con los zombies. */
 Juego.calcularAtaques = function() {
     this.enemigos.forEach(function(enemigo) {
         if (this.intersecan(enemigo, this.jugador, this.jugador.x, this.jugador.y)) {
-            /* Si el enemigo colisiona debe empezar su ataque
-            COMPLETAR */
+            /* Si el enemigo colisiona debe empezar su ataque*/
+            enemigo.comenzarAtaque(this.jugador);
         } else {
-            /* Sino, debe dejar de atacar
-            COMPLETAR */
+            /* Sino, debe dejar de atacar*/
+            enemigo.dejarDeAtacar();
         }
     }, this);
 };
@@ -235,11 +251,7 @@ Juego.chequearColisiones = function(x, y) {
     var puedeMoverse = true
     this.obstaculos().forEach(function(obstaculo) {
         if (this.intersecan(obstaculo, this.jugador, x, y)) {
-            debugger
-            obstaculo.chocar();
-
-            /*COMPLETAR, obstaculo debe chocar al jugador*/
-
+            obstaculo.chocar(this.jugador);
             puedeMoverse = false
         }
     }, this)
@@ -271,7 +283,8 @@ Juego.dibujarFondo = function() {
 
     // Si se gano el juego hay que mostrar el mensaje de ganoJuego de fondo
     else if (this.ganoJuego()) {
-        Dibujante.dibujarImagen('imagenes/Splash.png', 190, 113, 500, 203);
+        Dibujante.borrarAreaDeJuego();
+        Dibujante.dibujarImagen('imagenes/Splash.png', 0, 5, this.anchoCanvas, this.altoCanvas);
         document.getElementById('reiniciar').style.visibility = 'visible';
     } else {
         Dibujante.dibujarImagen('imagenes/mapa.png', 0, 5, this.anchoCanvas, this.altoCanvas);
@@ -286,8 +299,8 @@ Juego.terminoJuego = function() {
 Juego.ganoJuego = function() {
     return (this.jugador.y + this.jugador.alto) > 530;
 };
-
 Juego.iniciarRecursos();
+
 
 // Activa las lecturas del teclado al presionar teclas
 // Documentacion: https://developer.mozilla.org/es/docs/Web/API/EventTarget/addEventListener
@@ -296,7 +309,8 @@ document.addEventListener('keydown', function(e) {
         37: 'izq',
         38: 'arriba',
         39: 'der',
-        40: 'abajo'
+        40: 'abajo',
+        32: 'space'
     };
 
     Juego.capturarMovimiento(allowedKeys[e.keyCode]);

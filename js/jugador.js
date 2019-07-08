@@ -25,16 +25,13 @@ var Jugador = {
                 this.y += movimiento;
                 break;
             default:
-                //alert('Movimiento no detectado');
+                console.log('Movimiento no detectado');
                 break;
         }
     },
-    perdervidas: function() {
-            this.vidas -= 1;
-        }
-        // Hay que agregar lo que falte al jugador: movimientos, perdida de vidas,
-        // y todo lo que haga falta para que cumpla con sus responsabilidades
-
+    perderVidas: function(vidas) {
+        this.vidas -= vidas;
+    }
 }
 
 const jugador = Object.create(Jugador);
