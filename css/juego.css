@@ -20,7 +20,7 @@ canvas {
 
 .image {
     margin-top: calc(50vh - 286px);
-    height: 200px;
-    width: 33rem;
+    height: 13rem;
+    width: auto;
     float: left
 }
